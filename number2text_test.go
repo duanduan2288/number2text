@@ -77,4 +77,8 @@ func TestFloat2Chinese(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, "一百二十三", words)
 
+	words, err = Float2Chinese(-0.8123, 2)
+	require.NoError(t, err)
+	assert.Equal(t, "负零点八一", words)
+
 }

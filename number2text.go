@@ -86,6 +86,8 @@ func uInt2Chinese(i int64) (string, error) {
 
 func Float2Chinese(f float64, n int) (string, error) {
 
+	CHINESE_NEGATIVE := "负"
+
 	i := n
 	for ; i >= 0; i-- {
 		sf := strconv.FormatFloat(f, 'f', i, 64)
@@ -98,19 +100,25 @@ func Float2Chinese(f float64, n int) (string, error) {
 	amplifiedF := int64(f*math.Pow10(i) + 0.5)
 	amplifiedI := int64(roundF * math.Pow10(i))
 	decimalF := float64(amplifiedF-amplifiedI) / math.Pow10(i)
+	intF := int64(roundF)
 
 	if f < 0.0 {
 		roundF = math.Ceil(f)
 		amplifiedF = int64(f*math.Pow10(i) - 0.5)
 		amplifiedI = int64(roundF * math.Pow10(i))
 		decimalF = float64(amplifiedI-amplifiedF) / math.Pow10(i)
+		intF = int64(roundF * -1)
 	}
-	intF := int64(roundF)
 
-	intWords, err := Int2Chinese(intF)
+	intWords, err := uInt2Chinese(intF)
 	if err != nil {
 		return "", err
 	}
+
+	if f < 0.0 {
+		intWords = CHINESE_NEGATIVE + intWords
+	}
+
 	decimalWords, err := decimal2Chinese(decimalF, i)
 	if err != nil {
 		return "", err

@@ -97,6 +97,9 @@ func Float2Chinese(f float64, n int) (string, error) {
 	}
 
 	roundF := math.Floor(f)
+	if f-roundF > 0.999999 {
+		roundF = math.Ceil(f)
+	}
 	amplifiedF := int64(f*math.Pow10(i) + 0.5)
 	amplifiedI := int64(roundF * math.Pow10(i))
 	decimalF := float64(amplifiedF-amplifiedI) / math.Pow10(i)
@@ -104,6 +107,9 @@ func Float2Chinese(f float64, n int) (string, error) {
 
 	if f < 0.0 {
 		roundF = math.Ceil(f)
+		if roundF-f > 0.999999 {
+			roundF = math.Floor(f)
+		}
 		amplifiedF = int64(f*math.Pow10(i) - 0.5)
 		amplifiedI = int64(roundF * math.Pow10(i))
 		decimalF = float64(amplifiedI-amplifiedF) / math.Pow10(i)
